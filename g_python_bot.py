@@ -40,7 +40,7 @@ class Bot:
     def listener(self):
         self.__ext.intercept(Direction.TO_SERVER, self.show_profile, 'GetExtendedProfile')
         self.__ext.intercept(Direction.TO_SERVER, self.command_handler, 'SendMsg')
-        self.__ext.intercept(Direction.TO_CLIENT, self.block_msg, 'ErrorReport', mode="asyncmodify")
+        self.__ext.intercept(Direction.TO_CLIENT, self.block_msg, 'ErrorReport', mode="async_modify")
 
     def start(self):
         self.__ext.send_to_client(HPacket('FriendListUpdate', 0, 1, False, False, "",
