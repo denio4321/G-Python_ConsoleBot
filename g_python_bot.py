@@ -5,7 +5,7 @@ from g_python.gextension import Extension
 
 
 class Bot:
-    def __init__(self, extension: Extension, bot_id = 99999999, botname = "ConsoleBot", figurestring="hd-3704-29"):
+    def __init__(self, extension: Extension, bot_id=99999999, botname="ConsoleBot", figurestring="hd-3704-29"):
         self.__ext = extension
         self.bot_id = bot_id
         self.botname = botname
@@ -37,17 +37,14 @@ class Bot:
     def block_msg(message: HMessage):
         message.is_blocked = True
 
-    def listener(self):
-        self.__ext.intercept(Direction.TO_SERVER, self.show_profile, 'GetExtendedProfile')
-        self.__ext.intercept(Direction.TO_SERVER, self.command_handler, 'SendMsg')
-        self.__ext.intercept(Direction.TO_CLIENT, self.block_msg, 'ErrorReport', mode="async_modify")
-
     def start(self):
         self.__ext.send_to_client(HPacket('FriendListUpdate', 0, 1, False, False, "",
                                           self.bot_id, "[BOT] " + self.botname, 1, True, False, self.figure_string,
                                           0, "", 0, True, True, True, 65537))
-        event_handler = threading.Thread(target=self.listener)
-        event_handler.start()
+
+        self.__ext.intercept(Direction.TO_SERVER, self.show_profile, 'GetExtendedProfile')
+        self.__ext.intercept(Direction.TO_SERVER, self.command_handler, 'SendMsg')
+        self.__ext.intercept(Direction.TO_CLIENT, self.block_msg, 'ErrorReport', mode="async_modify")
 
     def hide_bot(self):
         self.__ext.send_to_client(HPacket('FriendListUpdate', 0, 1, -1, self.bot_id))
